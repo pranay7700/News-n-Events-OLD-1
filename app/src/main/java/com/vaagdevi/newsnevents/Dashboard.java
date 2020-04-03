@@ -69,7 +69,8 @@ public class Dashboard extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
 
-            /*  dashboardname=findViewById(R.id.nameTV);
+            /*
+           dashboardname=findViewById(R.id.nameTV);
                 dashboardemail=findViewById(R.id.emailTV);
                 dashboarduserid=findViewById(R.id.useridTV);
                 dashboardphoto=findViewById(R.id.photoIV);

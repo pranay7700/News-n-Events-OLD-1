@@ -16,10 +16,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class Registration extends AppCompatActivity {
 
-
+    private DatabaseReference databaseref;
 
     EditText Email;
     EditText Username;
@@ -48,14 +53,17 @@ public class Registration extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
 
+        databaseref=FirebaseDatabase.getInstance().getReference("News n Events");
+
+
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String email=Email.getText().toString();
-                String username=Username.getText().toString();
-                String password=Password.getText().toString();
-                String confirmpassword=Confirmpassword.getText().toString();
+                final String email=Email.getText().toString();
+                final String username=Username.getText().toString();
+                final String password=Password.getText().toString();
+                final String confirmpassword=Confirmpassword.getText().toString();
 
                 if (email.isEmpty()&&username.isEmpty()&&password.isEmpty()&&confirmpassword.isEmpty())
                 {
@@ -89,15 +97,24 @@ public class Registration extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
 
-                                    if (!(task.isSuccessful())) {
+                                    if ((task.isSuccessful())) {
                                         // Sign in success, update UI with the signed-in user's information
 
+                                        Regdatabase regdatabase=new Regdatabase(email,username,password,confirmpassword);
+
+                                        FirebaseDatabase.getInstance().getReference(databaseref.getKey()).child(mAuth.getCurrentUser().getUid())
+                                                .setValue(regdatabase).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+
+                                                startActivity(new Intent(Registration.this,MainActivity.class));
+                                                Toast.makeText(Registration.this,"Signing Up....",Toast.LENGTH_SHORT).show();
+                                                finish();
 
 
+                                            }
+                                        });
 
-                                        startActivity(new Intent(Registration.this,MainActivity.class));
-                                        Toast.makeText(Registration.this,"Signing Up....",Toast.LENGTH_SHORT).show();
-                                        finish();
 
 
 
